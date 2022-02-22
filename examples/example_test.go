@@ -1,11 +1,11 @@
 package examples
 
 import (
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	dynamock "github.com/gusaul/go-dynamock"
 	"testing"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 var mock *dynamock.DynaMock
@@ -16,18 +16,14 @@ func init() {
 }
 
 func TestGetName(t *testing.T) {
-	expectKey := map[string]*dynamodb.AttributeValue{
-		"id": {
-			N: aws.String("1"),
-		},
+	expectKey := map[string]types.AttributeValue{
+		"id": &types.AttributeValueMemberN{Value: "1"},
 	}
 
-	expectedResult := aws.String("jaka")
+	expectedResult := "jaka"
 	result := dynamodb.GetItemOutput{
-		Item: map[string]*dynamodb.AttributeValue{
-			"name": {
-				S: expectedResult,
-			},
+		Item: map[string]types.AttributeValue{
+			"name": &types.AttributeValueMemberS{Value: expectedResult},
 		},
 	}
 

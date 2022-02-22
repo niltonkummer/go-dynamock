@@ -1,12 +1,13 @@
 package dynamock
 
 import (
+	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-sdk-go/aws/request"
 	"reflect"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 // ToTable - method for set Table expectation
@@ -16,7 +17,7 @@ func (e *DeleteItemExpectation) ToTable(table string) *DeleteItemExpectation {
 }
 
 // WithKeys - method for set Keys expectation
-func (e *DeleteItemExpectation) WithKeys(keys map[string]*dynamodb.AttributeValue) *DeleteItemExpectation {
+func (e *DeleteItemExpectation) WithKeys(keys map[string]types.AttributeValue) *DeleteItemExpectation {
 	e.key = keys
 	return e
 }
@@ -28,7 +29,7 @@ func (e *DeleteItemExpectation) WillReturns(res dynamodb.DeleteItemOutput) *Dele
 }
 
 // DeleteItem - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) DeleteItem(input *dynamodb.DeleteItemInput) (*dynamodb.DeleteItemOutput, error) {
+func (e *MockDynamoDB) DeleteItem(ctx context.Context, input *dynamodb.DeleteItemInput, opts ...func(*dynamodb.Options)) (*dynamodb.DeleteItemOutput, error) {
 	if len(e.dynaMock.DeleteItemExpect) > 0 {
 		x := e.dynaMock.DeleteItemExpect[0] //get first element of expectation
 
@@ -54,7 +55,7 @@ func (e *MockDynamoDB) DeleteItem(input *dynamodb.DeleteItemInput) (*dynamodb.De
 }
 
 // DeleteItemWithContext - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) DeleteItemWithContext(ctx aws.Context, input *dynamodb.DeleteItemInput, options ...request.Option) (*dynamodb.DeleteItemOutput, error) {
+func (e *MockDynamoDB) DeleteItemWithContext(ctx context.Context, input *dynamodb.DeleteItemInput, options ...request.Option) (*dynamodb.DeleteItemOutput, error) {
 	if len(e.dynaMock.DeleteItemExpect) > 0 {
 		x := e.dynaMock.DeleteItemExpect[0] //get first element of expectation
 

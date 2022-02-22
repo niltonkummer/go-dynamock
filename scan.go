@@ -1,12 +1,10 @@
 package dynamock
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
-
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 // Table - method for set Table expectation
@@ -22,7 +20,7 @@ func (e *ScanExpectation) WillReturns(res dynamodb.ScanOutput) *ScanExpectation 
 }
 
 // Scan - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) Scan(input *dynamodb.ScanInput) (*dynamodb.ScanOutput, error) {
+func (e *MockDynamoDB) Scan(ctx context.Context, input *dynamodb.ScanInput, opts ...func(*dynamodb.Options)) (*dynamodb.ScanOutput, error) {
 	if len(e.dynaMock.ScanExpect) > 0 {
 		x := e.dynaMock.ScanExpect[0] //get first element of expectation
 
@@ -42,7 +40,7 @@ func (e *MockDynamoDB) Scan(input *dynamodb.ScanInput) (*dynamodb.ScanOutput, er
 }
 
 // ScanWithContext - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) ScanWithContext(ctx aws.Context, input *dynamodb.ScanInput, opts ...request.Option) (*dynamodb.ScanOutput, error) {
+func (e *MockDynamoDB) ScanWithContext(ctx context.Context, input *dynamodb.ScanInput, opts ...func(dynamodb.Options)) (*dynamodb.ScanOutput, error) {
 	if len(e.dynaMock.ScanExpect) > 0 {
 		x := e.dynaMock.ScanExpect[0] //get first element of expectation
 
@@ -83,7 +81,7 @@ func (e *MockDynamoDB) ScanPages(input *dynamodb.ScanInput, fn func(*dynamodb.Sc
 }
 
 // ScanPagesWithContext - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) ScanPagesWithContext(ctx aws.Context, input *dynamodb.ScanInput, fn func(*dynamodb.ScanOutput, bool) bool, opts ...request.Option) error {
+func (e *MockDynamoDB) ScanPagesWithContext(ctx context.Context, input *dynamodb.ScanInput, fn func(*dynamodb.ScanOutput, bool) bool, opts ...func(*dynamodb.Options)) error {
 	if len(e.dynaMock.ScanExpect) > 0 {
 		x := e.dynaMock.ScanExpect[0] //get first element of expectation
 

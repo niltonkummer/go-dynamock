@@ -1,10 +1,12 @@
 package dynamock
 
 import (
+	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"reflect"
 
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 // Name - method for set Name expectation
@@ -14,7 +16,7 @@ func (e *CreateTableExpectation) Name(table string) *CreateTableExpectation {
 }
 
 // KeySchema - method for set KeySchema expectation
-func (e *CreateTableExpectation) KeySchema(keySchema []*dynamodb.KeySchemaElement) *CreateTableExpectation {
+func (e *CreateTableExpectation) KeySchema(keySchema []*types.KeySchemaElement) *CreateTableExpectation {
 	e.keySchema = keySchema
 	return e
 }
@@ -26,7 +28,7 @@ func (e *CreateTableExpectation) WillReturns(res dynamodb.CreateTableOutput) *Cr
 }
 
 // CreateTable - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) CreateTable(input *dynamodb.CreateTableInput) (*dynamodb.CreateTableOutput, error) {
+func (e *MockDynamoDB) CreateTable(ctx context.Context, input *dynamodb.CreateTableInput, opts ...func(*dynamodb.Options))  (*dynamodb.CreateTableOutput, error) {
 	if len(e.dynaMock.CreateTableExpect) > 0 {
 		x := e.dynaMock.CreateTableExpect[0] //get first element of expectation
 

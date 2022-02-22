@@ -1,22 +1,23 @@
 package dynamock
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 // ToTable - method for set Table expectation
 func (e *PutItemExpectation) ToTable(table string) *PutItemExpectation {
 	e.table = &table
 	return e
+
 }
 
 // WithItems - method for set Items expectation
-func (e *PutItemExpectation) WithItems(item map[string]*dynamodb.AttributeValue) *PutItemExpectation {
+func (e *PutItemExpectation) WithItems(item map[string]types.AttributeValue) *PutItemExpectation {
 	e.item = item
 	return e
 }
@@ -28,7 +29,7 @@ func (e *PutItemExpectation) WillReturns(res dynamodb.PutItemOutput) *PutItemExp
 }
 
 // PutItem - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) PutItem(input *dynamodb.PutItemInput) (*dynamodb.PutItemOutput, error) {
+func (e *MockDynamoDB) PutItem(ctx context.Context, input *dynamodb.PutItemInput, opts ...func(*dynamodb.Options)) (*dynamodb.PutItemOutput, error) {
 	if len(e.dynaMock.PutItemExpect) > 0 {
 		x := e.dynaMock.PutItemExpect[0] //get first element of expectation
 
@@ -54,7 +55,7 @@ func (e *MockDynamoDB) PutItem(input *dynamodb.PutItemInput) (*dynamodb.PutItemO
 }
 
 // PutItemWithContext - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) PutItemWithContext(ctx aws.Context, input *dynamodb.PutItemInput, opt ...request.Option) (*dynamodb.PutItemOutput, error) {
+func (e *MockDynamoDB) PutItemWithContext(ctx context.Context, input *dynamodb.PutItemInput, opt ...func(*dynamodb.Options)) (*dynamodb.PutItemOutput, error) {
 	if len(e.dynaMock.PutItemExpect) > 0 {
 		x := e.dynaMock.PutItemExpect[0] //get first element of expectation
 

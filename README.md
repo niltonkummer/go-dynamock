@@ -16,9 +16,9 @@ First of all, change the dynamodb configuration to use the ***dynamodb interface
 package main
 
 import (
-    "github.com/aws/aws-sdk-go/aws"
+    "github.com/aws/aws-sdk-go-v2/aws"
     "github.com/aws/aws-sdk-go/aws/session"
-    "github.com/aws/aws-sdk-go/service/dynamodb"
+    "github.com/aws/aws-sdk-go-v2/service/dynamodb"
     "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 )
 
@@ -42,13 +42,13 @@ the purpose of code above is to make your dynamoDB object can be mocked by ***dy
 package main
 
 import (
-    "github.com/aws/aws-sdk-go/aws"
-    "github.com/aws/aws-sdk-go/service/dynamodb"
+    "github.com/aws/aws-sdk-go-v2/aws"
+    "github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 func GetName(id string) (*string, error) {
 	parameter := &dynamodb.GetItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
+		Key: map[string]types.AttributeValue{
 			"id": {
 				N: aws.String(id),
 			},
@@ -73,8 +73,8 @@ package examples
 import (
 	"testing"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	dynamock "github.com/gusaul/go-dynamock"
 )
 
@@ -86,7 +86,7 @@ func init() {
 }
 
 func TestGetName(t *testing.T) {
-	expectKey := map[string]*dynamodb.AttributeValue{
+	expectKey := map[string]types.AttributeValue{
 		"id": {
 			N: aws.String("1"),
 		},
@@ -94,7 +94,7 @@ func TestGetName(t *testing.T) {
 
 	expectedResult := aws.String("jaka")
 	result := dynamodb.GetItemOutput{
-		Item: map[string]*dynamodb.AttributeValue{
+		Item: map[string]types.AttributeValue{
 			"name": {
 				S: expectedResult,
 			},

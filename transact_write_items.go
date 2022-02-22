@@ -1,12 +1,12 @@
 package dynamock
 
 import (
+	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"reflect"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 // Table - method for set Table expectation
@@ -16,7 +16,7 @@ func (e *TransactWriteItemsExpectation) Table(table string) *TransactWriteItemsE
 }
 
 // WithItems - method for set Items expectation
-func (e *TransactWriteItemsExpectation) WithItems(items []*dynamodb.TransactWriteItem) *TransactWriteItemsExpectation {
+func (e *TransactWriteItemsExpectation) WithItems(items []*types.TransactWriteItem) *TransactWriteItemsExpectation {
 	e.items = items
 	return e
 }
@@ -28,7 +28,7 @@ func (e *TransactWriteItemsExpectation) WillReturns(res dynamodb.TransactWriteIt
 }
 
 // TransactWriteItems - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) TransactWriteItems(input *dynamodb.TransactWriteItemsInput) (*dynamodb.TransactWriteItemsOutput, error) {
+func (e *MockDynamoDB) TransactWriteItems(ctx context.Context, input *dynamodb.TransactWriteItemsInput, opts ...func(*dynamodb.Options)) (*dynamodb.TransactWriteItemsOutput, error) {
 	if len(e.dynaMock.TransactWriteItemsExpect) > 0 {
 		x := e.dynaMock.TransactWriteItemsExpect[0] // get first element of expectation
 
@@ -63,6 +63,6 @@ func (e *MockDynamoDB) TransactWriteItems(input *dynamodb.TransactWriteItemsInpu
 	return &dynamodb.TransactWriteItemsOutput{}, fmt.Errorf("Transact Write Items Table Expectation Not Found")
 }
 
-func (e *MockDynamoDB) TransactWriteItemsWithContext(ctx aws.Context, input *dynamodb.TransactWriteItemsInput, opts ...request.Option) (*dynamodb.TransactWriteItemsOutput, error) {
-  return e.TransactWriteItems(input)
+func (e *MockDynamoDB) TransactWriteItemsWithContext(ctx context.Context, input *dynamodb.TransactWriteItemsInput, opts ...func(*dynamodb.Options)) (*dynamodb.TransactWriteItemsOutput, error) {
+	return e.TransactWriteItems(ctx, input, opts...)
 }

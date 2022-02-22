@@ -1,16 +1,16 @@
 package dynamock
 
 import (
+	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"reflect"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 // WithRequest - method for set Request expectation
-func (e *BatchWriteItemExpectation) WithRequest(input map[string][]*dynamodb.WriteRequest) *BatchWriteItemExpectation {
+func (e *BatchWriteItemExpectation) WithRequest(input map[string][]*types.WriteRequest) *BatchWriteItemExpectation {
 	e.input = input
 	return e
 }
@@ -22,7 +22,7 @@ func (e *BatchWriteItemExpectation) WillReturns(res dynamodb.BatchWriteItemOutpu
 }
 
 // BatchWriteItem - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) BatchWriteItem(input *dynamodb.BatchWriteItemInput) (*dynamodb.BatchWriteItemOutput, error) {
+func (e *MockDynamoDB) BatchWriteItem(ctx context.Context, input *dynamodb.BatchWriteItemInput, opts ...func(*dynamodb.Options)) (*dynamodb.BatchWriteItemOutput, error) {
 	if len(e.dynaMock.BatchWriteItemExpect) > 0 {
 		for i, x := range e.dynaMock.BatchWriteItemExpect {
 			if x.input != nil {
@@ -38,7 +38,7 @@ func (e *MockDynamoDB) BatchWriteItem(input *dynamodb.BatchWriteItemInput) (*dyn
 }
 
 // BatchWriteItemWithContext - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) BatchWriteItemWithContext(ctx aws.Context, input *dynamodb.BatchWriteItemInput, opt ...request.Option) (*dynamodb.BatchWriteItemOutput, error) {
+func (e *MockDynamoDB) BatchWriteItemWithContext(ctx context.Context, input *dynamodb.BatchWriteItemInput, opt ...func(*dynamodb.Options)) (*dynamodb.BatchWriteItemOutput, error) {
 	if len(e.dynaMock.BatchWriteItemExpect) > 0 {
 		x := e.dynaMock.BatchWriteItemExpect[0] //get first element of expectation
 

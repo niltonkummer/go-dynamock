@@ -1,12 +1,13 @@
 package dynamock
 
 import (
+	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"reflect"
 
-	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
 // ToTable - method for set Table expectation
@@ -16,13 +17,13 @@ func (e *UpdateItemExpectation) ToTable(table string) *UpdateItemExpectation {
 }
 
 // WithKeys - method for set Keys expectation
-func (e *UpdateItemExpectation) WithKeys(keys map[string]*dynamodb.AttributeValue) *UpdateItemExpectation {
+func (e *UpdateItemExpectation) WithKeys(keys map[string]types.AttributeValue) *UpdateItemExpectation {
 	e.key = keys
 	return e
 }
 
 // Updates - method for set Updates expectation
-func (e *UpdateItemExpectation) Updates(attrs map[string]*dynamodb.AttributeValueUpdate) *UpdateItemExpectation {
+func (e *UpdateItemExpectation) Updates(attrs map[string]types.AttributeValueUpdate) *UpdateItemExpectation {
 	e.attributeUpdates = attrs
 	return e
 }
@@ -34,7 +35,7 @@ func (e *UpdateItemExpectation) WillReturns(res dynamodb.UpdateItemOutput) *Upda
 }
 
 // UpdateItem - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) UpdateItem(input *dynamodb.UpdateItemInput) (*dynamodb.UpdateItemOutput, error) {
+func (e *MockDynamoDB) UpdateItem(ctx context.Context, input *dynamodb.UpdateItemInput, opts ...func(*dynamodb.Options)) (*dynamodb.UpdateItemOutput, error) {
 	if len(e.dynaMock.UpdateItemExpect) > 0 {
 		x := e.dynaMock.UpdateItemExpect[0] //get first element of expectation
 
@@ -66,7 +67,7 @@ func (e *MockDynamoDB) UpdateItem(input *dynamodb.UpdateItemInput) (*dynamodb.Up
 }
 
 // UpdateItemWithContext - this func will be invoked when test running matching expectation with actual input
-func (e *MockDynamoDB) UpdateItemWithContext(ctx aws.Context, input *dynamodb.UpdateItemInput, opt ...request.Option) (*dynamodb.UpdateItemOutput, error) {
+func (e *MockDynamoDB) UpdateItemWithContext(ctx context.Context, input *dynamodb.UpdateItemInput, opt ...request.Option) (*dynamodb.UpdateItemOutput, error) {
 	if len(e.dynaMock.UpdateItemExpect) > 0 {
 		x := e.dynaMock.UpdateItemExpect[0] //get first element of expectation
 

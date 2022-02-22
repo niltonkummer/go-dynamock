@@ -1,8 +1,9 @@
 package dynamock
 
 import (
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/niltonkummer/dynamo/dynamodbiface"
 )
 
 type (
@@ -31,47 +32,47 @@ type (
 	// GetItemExpectation struct hold expectation field, err, and result
 	GetItemExpectation struct {
 		table  *string
-		key    map[string]*dynamodb.AttributeValue
+		key    map[string]types.AttributeValue
 		output *dynamodb.GetItemOutput
 	}
 
 	// BatchGetItemExpectation struct hold expectation field, err, and result
 	BatchGetItemExpectation struct {
-		input  map[string]*dynamodb.KeysAndAttributes
+		input  map[string]*types.KeysAndAttributes
 		output *dynamodb.BatchGetItemOutput
 	}
 
 	// UpdateItemExpectation struct hold expectation field, err, and result
 	UpdateItemExpectation struct {
-		attributeUpdates map[string]*dynamodb.AttributeValueUpdate
-		key              map[string]*dynamodb.AttributeValue
+		attributeUpdates map[string]types.AttributeValueUpdate
+		key              map[string]types.AttributeValue
 		table            *string
 		output           *dynamodb.UpdateItemOutput
 	}
 
 	// PutItemExpectation struct hold expectation field, err, and result
 	PutItemExpectation struct {
-		item   map[string]*dynamodb.AttributeValue
+		item   map[string]types.AttributeValue
 		table  *string
 		output *dynamodb.PutItemOutput
 	}
 
 	// DeleteItemExpectation struct hold expectation field, err, and result
 	DeleteItemExpectation struct {
-		key    map[string]*dynamodb.AttributeValue
+		key    map[string]types.AttributeValue
 		table  *string
 		output *dynamodb.DeleteItemOutput
 	}
 
 	// BatchWriteItemExpectation struct hold expectation field, err, and result
 	BatchWriteItemExpectation struct {
-		input  map[string][]*dynamodb.WriteRequest
+		input  map[string][]*types.WriteRequest
 		output *dynamodb.BatchWriteItemOutput
 	}
 
 	// CreateTableExpectation struct hold expectation field, err, and result
 	CreateTableExpectation struct {
-		keySchema []*dynamodb.KeySchemaElement
+		keySchema []*types.KeySchemaElement
 		table     *string
 		output    *dynamodb.CreateTableOutput
 	}
@@ -103,7 +104,8 @@ type (
 	// TransactWriteItemsExpectation struct holds field, err, and result
 	TransactWriteItemsExpectation struct {
 		table  *string
-		items  []*dynamodb.TransactWriteItem
+		items  []*types.TransactWriteItem
 		output *dynamodb.TransactWriteItemsOutput
 	}
 )
+
