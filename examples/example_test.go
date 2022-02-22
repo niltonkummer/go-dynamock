@@ -2,7 +2,7 @@ package examples
 
 import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	dynamock "github.com/gusaul/go-dynamock"
+	dynamock "github.com/niltonkummer/go-dynamock"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
